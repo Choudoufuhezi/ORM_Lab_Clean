@@ -4,6 +4,8 @@ const bcrypt = require('bcryptjs');
 // const dbModel = include('databaseAccessLayer');
 //const dbModel = include('staticData');
 const userModel = include('models/web_user');
+const petModel = include('models/pet');
+
 
 router.get('/', async (req, res) => {
 	console.log("page hit");
@@ -26,6 +28,13 @@ router.get('/', async (req, res) => {
 	}
 });
 
+router.get('/pets', async (req, res) => {
+    const pets = await petModel.findAll();
+
+    res.render('pets', {
+        allPets: pets
+    });
+});
 
 router.post('/addUser', async (req, res) => {
 	try {
