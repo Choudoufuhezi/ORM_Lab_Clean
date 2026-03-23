@@ -35,7 +35,7 @@ router.get('/pets', async (req, res) => {
         const pets = await petModel.findAll();
         console.log(pets);
 
-        res.render('pets', {
+        res.render('pet', {
             allPets: pets
         });
     } catch (err) {
