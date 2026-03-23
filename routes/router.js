@@ -29,11 +29,21 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/pets', async (req, res) => {
-    const pets = await petModel.findAll();
+    console.log("PETS ROUTE HIT");
 
-    res.render('pets', {
-        allPets: pets
-    });
+    try {
+        const pets = await petModel.findAll();
+        console.log(pets);
+
+        res.render('pets', {
+            allPets: pets
+        });
+    } catch (err) {
+        console.log("RROR IN /pets:");
+        console.log(err);
+
+        res.send(err.message); 
+    }
 });
 
 router.post('/addUser', async (req, res) => {
