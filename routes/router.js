@@ -3,8 +3,8 @@ const bcrypt = require('bcryptjs');
 // const database = include('databaseConnection');
 // const dbModel = include('databaseAccessLayer');
 //const dbModel = include('staticData');
-const userModel = include('models/web_user');
 const petModel = include('models/pet');
+const userModel = include('models/web_user');
 
 
 router.get('/', async (req, res) => {
