@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const bcrypt = require('bcryptjs');
 // const database = include('databaseConnection');
 // const dbModel = include('databaseAccessLayer');
 //const dbModel = include('staticData');
@@ -27,43 +28,46 @@ router.get('/', async (req, res) => {
 
 
 router.post('/addUser', async (req, res) => {
-    console.log("form submit");
-    console.log(req.body);
-	
 	try {
-		const success = await dbModel.addUser(req.body);
-		if (success) {
-			res.redirect("/");
-		}
-		else {
-			res.render('error', {message: "Error writing to MySQL"});
-			console.log("Error writing to MySQL");
-		}
+		console.log("form submit");
+		const password_hash = await bcrypt.hash(req.body.password, 12);
+		let newUser = userModel.build(
+			{
+				first_name: req.body.first_name,
+				last_name: req.body.last_name,
+				email: req.body.email,
+				password_salt: password_hash
+			}
+		);
+		await newUser.save();
+		res.redirect("/");
 	}
-	catch (err) {
-		res.render('error', {message: "Error writing to MySQL"});
-		console.log("Error writing to MySQL");
-		console.log(err);
+	catch(ex) {
+		res.render('error', {message: 'Error connecting to MySQL'});
+		console.log("Error connecting to MySQL");
+		console.log(ex);
 	}
 });
 
 router.get('/deleteUser', async (req, res) => {
-    console.log("delete user");
-	
-	console.log(req.query);
-
-	let userId = req.query.id;
-	
-	if (userId) {
-		const success = await dbModel.deleteUser(userId);
-		if (success) {
-			res.redirect("/");
+	try {
+		console.log("delete user");
+		let userId = req.query.id;
+		if (userId) {
+			console.log("userId: "+userId);
+			let deleteUser = await userModel.findByPk(userId);
+			console.log("deleteUser: ");
+			console.log(deleteUser);
+			if (deleteUser !== null) {
+				
+			}
 		}
-		else {
-			res.render('error', {message: 'Error writing to MySQL'});
-			console.log("Error writing to mysql");
-			console.log(err);
-		}
+		res.redirect("/");
+	}
+	catch(ex) {
+		res.render('error', {message: 'Error connecting to MySQL'});
+		console.log("Error connecting to MySQL");
+		console.log(ex);
 	}
 });
 
